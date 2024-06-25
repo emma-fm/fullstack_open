@@ -8,6 +8,12 @@ const App = () => {
 
   const handleAddContact = (ev) => {
     ev.preventDefault()
+
+    if (persons.find((e) => e.name === newName)) {
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
+
     setPersons(persons.concat({id: persons.length, name: newName}))
     setNewName('')
   }
