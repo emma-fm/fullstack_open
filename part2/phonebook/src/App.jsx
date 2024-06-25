@@ -2,9 +2,10 @@ import { useState } from 'react'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { id: 0, name: 'Arto Hellas' }
+    { id: 0, name: 'Arto Hellas', number: '040-1234567'}
   ]) 
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   const handleAddContact = (ev) => {
     ev.preventDefault()
@@ -14,8 +15,14 @@ const App = () => {
       return
     }
 
-    setPersons(persons.concat({id: persons.length, name: newName}))
+    if (newNumber.length == 0) {
+      alert("No number set")
+      return
+    }
+
+    setPersons(persons.concat({id: persons.length, name: newName, number: newNumber}))
     setNewName('')
+    setNewNumber('')
   }
 
   return (
@@ -26,12 +33,15 @@ const App = () => {
           name: <input onChange={(ev) => setNewName(ev.target.value)} value={newName}/>
         </div>
         <div>
+          number: <input onChange={(ev) => setNewNumber(ev.target.value)} value={newNumber} />
+        </div>
+        <div>
           <button type="submit" onClick={handleAddContact}>add</button>
         </div>
       </form>
       <h2>Numbers</h2>
       <div>
-        {persons.map(p => <p key={p.id}>{p.name}</p>)}
+        {persons.map(p => <p key={p.id}>{p.name} {p.number}</p>)}
       </div>
     </div>
   )
