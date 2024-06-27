@@ -27,10 +27,22 @@ const PersonForm = ({name, number, onChangeName, onChangeNumber, onClick}) => {
   )
 }
 
-const Persons = ({persons}) => {
+const Person = ({person, onRemove}) => {
+
   return(
     <div>
-      {persons.map(p => <p key={p.id}>{p.name} {p.number}</p>)}
+      <p>
+        {person.name} {person.number}
+        <button type="submit" onClick={() => onRemove(person)}>delete</button>
+      </p>
+    </div>
+  )
+}
+
+const PersonsList = ({persons, onRemove}) => {
+  return(
+    <div>
+      {persons.map(p => <Person key={p.id} person={p} onRemove={onRemove}/>)}
     </div>
   )
 }
@@ -59,8 +71,9 @@ const App = () => {
 
     personsService.create({name: newName, number: newNumber})
     .then(data => {
-      setPersons(data)
-      setShownPersons(data.filter(p => p.name.toLowerCase().includes(filter)))
+      console.log(data)
+      setPersons(persons.concat(data))
+      setShownPersons(persons.concat(data).filter(p => p.name.toLowerCase().includes(filter)))
       setNewName('')
       setNewNumber('')
     })
@@ -70,6 +83,15 @@ const App = () => {
     setFilter(ev.target.value.toLowerCase())
 
     setShownPersons(persons.filter(p => p.name.toLowerCase().includes(ev.target.value.toLowerCase())))
+  }
+
+  const handleRemove = (person) => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personsService.remove(person.id)
+
+      setPersons(persons.filter(p => p.id !== person.id))
+      setShownPersons(shownPersons.filter(p => p.id !== person.id))
+    }
   }
 
   useEffect(() => {
@@ -92,7 +114,7 @@ const App = () => {
         onClick={handleAddContact}
       />
       <h2>Numbers</h2>
-      <Persons persons={shownPersons} />
+      <PersonsList persons={shownPersons} onRemove={handleRemove}/>
     </div>
   )
 }
