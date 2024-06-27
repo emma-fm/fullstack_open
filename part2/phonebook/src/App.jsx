@@ -59,19 +59,32 @@ const App = () => {
   const handleAddContact = (ev) => {
     ev.preventDefault()
 
-    if (persons.find((e) => e.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
-
     if (newNumber.length == 0) {
       alert("No number set")
       return
     }
 
+    // Update existing contact
+    const existingContact = persons.find((p) => p.name === newName)
+    if (existingContact) {
+      if (!window.confirm(`${existingContact.name} is already added to phonebook, replace the old number with a new one?`)) {
+        return
+      }
+
+      personsService.update(existingContact.id, {...existingContact, number: newNumber})
+      .then(data => {
+        setPersons(persons.map((p) => p.id === data.id ? data: p))
+        setShownPersons(persons.map((p) => p.id === data.id ? data: p).filter(p => p.name.toLowerCase().includes(filter)))
+        setNewName('')
+        setNewNumber('')
+      })
+
+      return
+    }
+
+    // Create new contact
     personsService.create({name: newName, number: newNumber})
     .then(data => {
-      console.log(data)
       setPersons(persons.concat(data))
       setShownPersons(persons.concat(data).filter(p => p.name.toLowerCase().includes(filter)))
       setNewName('')
