@@ -47,9 +47,9 @@ const PersonsList = ({persons, onRemove}) => {
   )
 }
 
-const Notification = ({message}) => {
+const Notification = ({message, error}) => {
   const st = {
-    color: 'green',
+    color: (error === true) ? 'red' : 'green',
     background: 'lightgrey',
     fontSize: 20,
     borderStyle: 'solid',
@@ -77,6 +77,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   const [bannerMsg, setBannerMsg] = useState('')
+  const [bannerError, setBannerError] = useState(false)
 
   const handleAddContact = (ev) => {
     ev.preventDefault()
@@ -106,6 +107,17 @@ const App = () => {
         setShownPersons(persons.map((p) => p.id === data.id ? data: p).filter(p => p.name.toLowerCase().includes(filter)))
         setNewName('')
         setNewNumber('')
+      })
+      .catch(error => {
+        setBannerError(true)
+        setBannerMsg(
+          `Contact ${existingContact.name} deleted from phonebook`
+        )
+        setTimeout(() => {
+          setBannerError(false)
+          setBannerMsg('')
+        }, 5000)
+        
       })
 
       return
@@ -138,18 +150,29 @@ const App = () => {
   const handleRemove = (person) => {
     if (window.confirm(`Delete ${person.name}?`)) {
       personsService.remove(person.id)
+      .then(data => {
+        setPersons(persons.filter(p => p.id !== person.id))
+        setShownPersons(shownPersons.filter(p => p.id !== person.id))
+  
+        setBannerMsg(
+          `Removed ${person.name} contact information.`
+        )
+        setTimeout(() => {
+          setBannerMsg('')
+        }, 5000)
+      })
+      .catch(error => {
+        setBannerError(true)
+        setBannerMsg(
+          `Contact ${person.name} already deleted from phonebook`
+        )
+        setTimeout(() => {
+          setBannerError(false)
+          setBannerMsg('')
+        }, 5000)
+        
+      })
 
-      setPersons(persons.filter(p => p.id !== person.id))
-      setShownPersons(shownPersons.filter(p => p.id !== person.id))
-
-      setBannerMsg(
-        `Removed ${person.name} contact information.`
-      )
-      setTimeout(() => {
-        setBannerMsg('')
-      }, 5000)
-
-      return
     }
   }
 
@@ -163,7 +186,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={bannerMsg} />
+      <Notification message={bannerMsg} error={bannerError}/>
       <h2>Phonebook</h2>
       <Filter onChange={handleFilterChange} />
       <h2>Add a new number</h2>
