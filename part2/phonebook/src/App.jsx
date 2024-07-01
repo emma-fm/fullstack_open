@@ -47,6 +47,26 @@ const PersonsList = ({persons, onRemove}) => {
   )
 }
 
+const Notification = ({message}) => {
+  const st = {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 50,
+    padding: 10,
+    marginBottom: 10
+  }
+
+  if (message === '') return null
+
+  return(
+    <div style={st}>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
 
@@ -55,6 +75,8 @@ const App = () => {
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+
+  const [bannerMsg, setBannerMsg] = useState('')
 
   const handleAddContact = (ev) => {
     ev.preventDefault()
@@ -73,6 +95,13 @@ const App = () => {
 
       personsService.update(existingContact.id, {...existingContact, number: newNumber})
       .then(data => {
+        setBannerMsg(
+          `Updated ${existingContact.name} contact information.`
+        )
+        setTimeout(() => {
+          setBannerMsg('')
+        }, 5000)
+
         setPersons(persons.map((p) => p.id === data.id ? data: p))
         setShownPersons(persons.map((p) => p.id === data.id ? data: p).filter(p => p.name.toLowerCase().includes(filter)))
         setNewName('')
@@ -85,11 +114,19 @@ const App = () => {
     // Create new contact
     personsService.create({name: newName, number: newNumber})
     .then(data => {
+      setBannerMsg(
+        `Added ${data.name} to the phonebook.`
+      )
+      setTimeout(() => {
+        setBannerMsg('')
+      }, 5000)
+
       setPersons(persons.concat(data))
       setShownPersons(persons.concat(data).filter(p => p.name.toLowerCase().includes(filter)))
       setNewName('')
       setNewNumber('')
     })
+
   }
 
   const handleFilterChange = (ev) => {
@@ -104,9 +141,19 @@ const App = () => {
 
       setPersons(persons.filter(p => p.id !== person.id))
       setShownPersons(shownPersons.filter(p => p.id !== person.id))
+
+      setBannerMsg(
+        `Removed ${person.name} contact information.`
+      )
+      setTimeout(() => {
+        setBannerMsg('')
+      }, 5000)
+
+      return
     }
   }
 
+  // Triggers on first rendering
   useEffect(() => {
     personsService.getAll().then(data => {
       setPersons(data)
@@ -116,6 +163,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={bannerMsg} />
       <h2>Phonebook</h2>
       <Filter onChange={handleFilterChange} />
       <h2>Add a new number</h2>
