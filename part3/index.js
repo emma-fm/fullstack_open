@@ -40,6 +40,13 @@ app.get('/api/persons/:id', (request, response) => {
   }
 })
 
+app.delete('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  phonebook = phonebook.filter(p => p.id !== id)
+  console.log(phonebook)
+  response.status(204).end()
+})
+
 app.get('/info', (request, response) => {
   const today = new Date(Date.now())
   response.send(`
