@@ -1,4 +1,5 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 let phonebook = [
@@ -24,7 +25,7 @@ let phonebook = [
     }
 ]
 
-app.use(express.json())
+app.use(express.json(), morgan('tiny'))
 
 app.get('/api/persons', (request, response) => {
     response.json(phonebook)
@@ -32,8 +33,6 @@ app.get('/api/persons', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
-
-  console.log(body)
 
   if (!body.name || !body.number) {
     return response.status(400).json({
@@ -73,7 +72,6 @@ app.get('/api/persons/:id', (request, response) => {
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
   phonebook = phonebook.filter(p => p.id !== id)
-  console.log(phonebook)
   response.status(204).end()
 })
 
