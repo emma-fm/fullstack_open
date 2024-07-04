@@ -24,8 +24,30 @@ let phonebook = [
     }
 ]
 
+app.use(express.json())
+
 app.get('/api/persons', (request, response) => {
     response.json(phonebook)
+})
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+
+  console.log(body)
+
+  if (!body.name || !body.number) {
+    return response.status(400).end()
+  }
+
+  const person = {
+    id: `${Math.floor(Math.random() * 10000)}`,
+    name: body.name,
+    number: body.number
+  }
+
+  phonebook = phonebook.concat(person)
+
+  response.json(person)
 })
 
 app.get('/api/persons/:id', (request, response) => {
