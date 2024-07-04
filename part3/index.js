@@ -36,7 +36,15 @@ app.post('/api/persons', (request, response) => {
   console.log(body)
 
   if (!body.name || !body.number) {
-    return response.status(400).end()
+    return response.status(400).json({
+      error: 'Incorrect JSON format'
+    })
+  }
+
+  if (phonebook.find(p => p.name === body.name)) {
+    return response.status(400).json({
+      error: 'Name already found at phonebook'
+    })
   }
 
   const person = {
