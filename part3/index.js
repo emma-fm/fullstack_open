@@ -26,7 +26,11 @@ let phonebook = [
     }
 ]
 
-app.use(cors(), express.json(), morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+app.use(
+  cors(),
+  express.static('frontend/dist'),
+  express.json(),
+  morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 morgan.token('body', (req, res) => {
   return JSON.stringify(req.body)
