@@ -30,21 +30,14 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  if (phonebook.find(p => p.name === body.name)) {
-    return response.status(400).json({
-      error: 'Name already found at phonebook'
-    })
-  }
-
-  const person = {
-    id: `${Math.floor(Math.random() * 10000)}`,
+  const pers = new Person({
     name: body.name,
     number: body.number
-  }
+  })
 
-  phonebook = phonebook.concat(person)
-
-  response.json(person)
+  pers.save().then(result => {
+    response.json(pers)
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -52,7 +45,7 @@ app.get('/api/persons/:id', (request, response) => {
 
   Person.find({_id: id})
   .then(pers => {
-    if (pers.length > 0) {
+    if (pers) {
       response.json(pers) 
     }
     else {
