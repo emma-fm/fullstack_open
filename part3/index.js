@@ -46,6 +46,30 @@ app.post('/api/persons', (request, response, next) => {
   })
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+  const id = request.params.id
+
+  if (!body.name || !body.number) {
+    return response.status(400).json({
+      error: 'Incorrect JSON format'
+    })
+  }
+
+  const pers = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person.findByIdAndUpdate(id, pers, {updated: true})
+    .then(updatedNote => {
+      response.json(updatedNote)
+    })
+    .catch(error => {
+      next(error)
+    })
+})
+
 app.get('/api/persons/:id', (request, response, next) => {
   const id = request.params.id
 
