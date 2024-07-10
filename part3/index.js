@@ -2,29 +2,8 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
-
-let phonebook = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
+const Person = require('./models/person')
+require('dotenv').config()
 
 app.use(
   cors(),
@@ -37,7 +16,9 @@ morgan.token('body', (req, res) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(phonebook)
+    Person.find({}).then(phonebook => {
+      response.json(phonebook)
+    })
 })
 
 app.post('/api/persons', (request, response) => {
@@ -68,14 +49,16 @@ app.post('/api/persons', (request, response) => {
 
 app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  const person = phonebook.find(p => p.id === id)
 
-  if (person) {
-    response.json(person)
-  }
-  else {
-    response.status(404).end()
-  }
+  Person.find({_id: id})
+  .then(pers => {
+    if (pers.length > 0) {
+      response.json(pers) 
+    }
+    else {
+      response.status(404).end()
+    }
+  })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -92,7 +75,7 @@ app.get('/info', (request, response) => {
     `)
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
