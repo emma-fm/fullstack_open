@@ -73,9 +73,9 @@ app.put('/api/persons/:id', (request, response, next) => {
 app.get('/api/persons/:id', (request, response, next) => {
   const id = request.params.id
 
-  Person.find({_id: id})
+  Person.findById(id)
   .then(pers => {
-    if (pers && pers.length > 0) {
+    if (pers) {
       response.json(pers) 
     }
     else {
@@ -101,10 +101,16 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 app.get('/info', (request, response, next) => {
   const today = new Date(Date.now())
-  response.send(`
-    <p>Phonebook has info for ${phonebook.length} people</p>
-    <p>${today.toUTCString()}</p>
+
+  Person.find({}).then(phonebook => {
+    response.send(`
+      <p>Phonebook has info for ${phonebook.length} people</p>
+      <p>${today.toUTCString()}</p>
     `)
+  })
+  .catch(error => {
+    next(error)
+  })
 })
 
 const errorHandler = (error, request, response, next) => {
