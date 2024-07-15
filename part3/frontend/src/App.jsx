@@ -111,7 +111,7 @@ const App = () => {
       .catch(error => {
         setBannerError(true)
         setBannerMsg(
-          `Contact ${existingContact.name} deleted from phonebook`
+          `${error.response.data.error}`
         )
         setTimeout(() => {
           setBannerError(false)
@@ -138,7 +138,16 @@ const App = () => {
       setNewName('')
       setNewNumber('')
     })
-
+    .catch(error => {
+      setBannerError(true)
+      setBannerMsg(
+        `${error.response.data.error}`
+      )
+      setTimeout(() => {
+        setBannerError(false)
+        setBannerMsg('')
+      }, 5000)
+    })
   }
 
   const handleFilterChange = (ev) => {
@@ -164,7 +173,7 @@ const App = () => {
       .catch(error => {
         setBannerError(true)
         setBannerMsg(
-          `Contact ${person.name} already deleted from phonebook`
+          `${error.response.data.error}`
         )
         setTimeout(() => {
           setBannerError(false)

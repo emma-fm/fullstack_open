@@ -27,12 +27,6 @@ app.get('/api/persons', (request, response, next) => {
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
-  if (!body.name || !body.number) {
-    return response.status(400).json({
-      error: 'Incorrect JSON format'
-    })
-  }
-
   const pers = new Person({
     name: body.name,
     number: body.number
@@ -50,18 +44,12 @@ app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
   const id = request.params.id
 
-  if (!body.name || !body.number) {
-    return response.status(400).json({
-      error: 'Incorrect JSON format'
-    })
-  }
-
   const pers = {
     name: body.name,
     number: body.number
   }
 
-  Person.findByIdAndUpdate(id, pers, {updated: true})
+  Person.findByIdAndUpdate(id, pers, {updated: true, runValidators: true, context: 'query'})
     .then(updatedNote => {
       response.json(updatedNote)
     })
@@ -117,7 +105,10 @@ const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id'})
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+  else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
 
   next(error)
