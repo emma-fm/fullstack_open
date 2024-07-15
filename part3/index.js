@@ -11,12 +11,13 @@ app.use(
   express.json(),
   morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-morgan.token('body', (req, res) => {
+morgan.token('body', (req) => {
   return JSON.stringify(req.body)
 })
 
 app.get('/api/persons', (request, response, next) => {
-    Person.find({}).then(phonebook => {
+  Person.find({})
+    .then(phonebook => {
       response.json(phonebook)
     })
     .catch(error => {
@@ -32,12 +33,13 @@ app.post('/api/persons', (request, response, next) => {
     number: body.number
   })
 
-  pers.save().then(result => {
-    response.json(pers)
-  })
-  .catch(error => {
-    next(error)
-  })
+  pers.save()
+    .then(() => {
+      response.json(pers)
+    })
+    .catch(error => {
+      next(error)
+    })
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -49,7 +51,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number
   }
 
-  Person.findByIdAndUpdate(id, pers, {updated: true, runValidators: true, context: 'query'})
+  Person.findByIdAndUpdate(id, pers, { updated: true, runValidators: true, context: 'query' })
     .then(updatedNote => {
       response.json(updatedNote)
     })
@@ -62,43 +64,44 @@ app.get('/api/persons/:id', (request, response, next) => {
   const id = request.params.id
 
   Person.findById(id)
-  .then(pers => {
-    if (pers) {
-      response.json(pers) 
-    }
-    else {
-      response.status(404).end()
-    }
-  })
-  .catch(error => {
-    next(error)
-  })
+    .then(pers => {
+      if (pers) {
+        response.json(pers)
+      }
+      else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => {
+      next(error)
+    })
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
   const id = request.params.id
 
   Person.findByIdAndDelete(id)
-  .then(result => {
-    response.status(204).end()
-  })
-  .catch(error => {
-    next(error)
-  })
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => {
+      next(error)
+    })
 })
 
 app.get('/info', (request, response, next) => {
   const today = new Date(Date.now())
 
-  Person.find({}).then(phonebook => {
-    response.send(`
+  Person.find({})
+    .then(phonebook => {
+      response.send(`
       <p>Phonebook has info for ${phonebook.length} people</p>
       <p>${today.toUTCString()}</p>
     `)
-  })
-  .catch(error => {
-    next(error)
-  })
+    })
+    .catch(error => {
+      next(error)
+    })
 })
 
 const errorHandler = (error, request, response, next) => {
@@ -118,7 +121,7 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })
 
 
