@@ -16,6 +16,13 @@ const testBlog2 = {
     'likes': 20
 }
 
+const testBlog3 = {
+    'title': 'Blog3',
+    'author': 'Author2',
+    'url': 'url3',
+    'likes': 30
+}
+
 test('dummy returns one', () => {
   const blogs = []
 
@@ -39,7 +46,7 @@ describe('totalLikes', () => {
 
 describe('favoriteBlog', () => {
     test('of an empty list', () => {
-        assert.deepStrictEqual(listHelper.favoriteBlog([]), 0)
+        assert.deepStrictEqual(listHelper.favoriteBlog([]), {})
     })
 
     test('of a one element list', () => {
@@ -49,4 +56,25 @@ describe('favoriteBlog', () => {
     test('of a two elements list', () => {
         assert.deepStrictEqual(listHelper.favoriteBlog([testBlog1, testBlog2]), testBlog2)
     })
+})
+
+describe('mostBlogs', () => {
+    test('of an empty list', () => {
+        assert.deepStrictEqual(listHelper.mostBlogs([]), {})
+    })
+
+    test('of a one author list', () => {
+        assert.deepStrictEqual(listHelper.mostBlogs([testBlog1]), {
+            'author': testBlog1.author,
+            'blogs': 1
+        })
+    })
+
+    test('of a two authors list', () => {
+        assert.deepStrictEqual(listHelper.mostBlogs([testBlog1, testBlog2, testBlog3]), {
+            'author': testBlog2.author,
+            'blogs': 2
+        })
+    })
+
 })
