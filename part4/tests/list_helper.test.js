@@ -78,3 +78,24 @@ describe('mostBlogs', () => {
     })
 
 })
+
+describe('mostLikes', () => {
+    test('of an empty list', () => {
+        assert.deepStrictEqual(listHelper.mostLikes([]), {})
+    })
+
+    test('of a one author list', () => {
+        assert.deepStrictEqual(listHelper.mostLikes([testBlog1]), {
+            'author': testBlog1.author,
+            'likes': testBlog1.likes
+        })
+    })
+
+    test('of a two authors list', () => {
+        assert.deepStrictEqual(listHelper.mostLikes([testBlog1, testBlog2, testBlog3]), {
+            'author': testBlog2.author,
+            'likes': testBlog2.likes + testBlog3.likes
+        })
+    })
+
+})
