@@ -75,6 +75,22 @@ test('verify POST creates a new blog', async () => {
   assert.strictEqual(response.body.length, initialBlogs.length + 1)
 })
 
+test('default likes is 0', async () => {
+  const newBlog = {
+    'title': 'POST blog',
+    'author': 'Rick Rickards',
+    'url': 'http://postblog.us'
+  }
+
+  let response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  assert.strictEqual(response.body.likes, 0)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
