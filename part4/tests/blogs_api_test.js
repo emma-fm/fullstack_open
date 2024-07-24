@@ -128,6 +128,41 @@ describe('when deleting a blog', () => {
   })
 })
 
+describe('when updating a blog post', () => {
+  test('existing blog is updated', async () => {
+    let inDb = await helper.blogsInDB()
+
+    const req = {
+      likes: 123456
+    }
+
+    const response = await api
+      .put(`/api/blogs/${inDb[0].id}`)
+      .send(req)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(response.body.likes, 123456)
+  })
+
+  test('nonexisting blog does nothing', async () => {
+    const fakeId = await helper.nonExistingId()
+
+    const req = {
+      likes: 123456
+    }
+
+    await api
+      .put(`/api/blogs/${fakeId}`)
+      .send(req)
+      .expect(204)
+
+    const inDb = await helper.blogsInDB()
+
+    assert.strictEqual(inDb.length, helper.initialBlogs.length)
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
