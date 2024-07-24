@@ -31,15 +31,48 @@ beforeEach(async () => {
 })
 
 test('get expect number of blogs', async () => {
-  const response = await api.get('/api/blogs')
+  const response = await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
 
   assert.strictEqual(response.body.length, initialBlogs.length)
 })
 
 test('id property correctly named', async () => {
-  const response = await api.get('/api/blogs')
+  const response = await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
 
   assert.notEqual(response.body[0].id, undefined)
+})
+
+test('verify POST creates a new blog', async () => {
+  const newBlog = {
+    'title': 'POST blog',
+    'author': 'Rick Rickards',
+    'url': 'http://postblog.us',
+    'likes': 7
+  }
+
+  let response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  assert.strictEqual(response.body.title, newBlog.title)
+  assert.strictEqual(response.body.author, newBlog.author)
+  assert.strictEqual(response.body.url, newBlog.url)
+  assert.strictEqual(response.body.likes, newBlog.likes)
+
+  response = await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  assert.strictEqual(response.body.length, initialBlogs.length + 1)
 })
 
 after(async () => {
