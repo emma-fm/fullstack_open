@@ -36,6 +36,12 @@ test('get expect number of blogs', async () => {
   assert.strictEqual(response.body.length, initialBlogs.length)
 })
 
+test('id property correctly named', async () => {
+  const response = await api.get('/api/blogs')
+
+  assert.notEqual(response.body[0].id, undefined)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
