@@ -91,6 +91,34 @@ test('default likes is 0', async () => {
   assert.strictEqual(response.body.likes, 0)
 })
 
+test('missing title results in bad request', async () => {
+  const newBlog = {
+    'author': 'Rick Rickards',
+    'url': 'http://postblog.us',
+    'likes': 7
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+})
+
+test('missing url results in bad request', async () => {
+  const newBlog = {
+    'title': 'POST blog',
+    'author': 'Rick Rickards',
+    'likes': 7
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
