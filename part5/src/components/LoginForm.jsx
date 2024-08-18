@@ -17,6 +17,7 @@ const LoginForm = ({onLogin}) => {
       setUsername('')
       setPassword('')
     } catch (exception) {
+      onLogin(null)
       console.log('Error logging in')
     }
   }

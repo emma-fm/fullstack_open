@@ -3,7 +3,7 @@ import Blog from './Blog'
 import CreateBlog from './CreateBlog'
 import blogService from '../services/blogs'
 
-const BlogList = ({user, onLogout}) => {
+const BlogList = ({user, onLogout, onCreate}) => {
   const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const BlogList = ({user, onLogout}) => {
       </div>
       <h2>create new</h2>
       <div>
-        <CreateBlog/>
+        <CreateBlog onCreate={onCreate}/>
       </div>
       <div>
         {blogs.map(blog =>

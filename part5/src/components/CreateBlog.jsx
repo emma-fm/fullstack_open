@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const CreateBlog = () => {
+const CreateBlog = ({onCreate}) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
@@ -14,6 +14,7 @@ const CreateBlog = () => {
         title, author, url
       }
       blogService.create(blog)
+      onCreate(blog)
     }
   }
 
