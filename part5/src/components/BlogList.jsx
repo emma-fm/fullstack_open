@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './Blog'
 import CreateBlog from './CreateBlog'
+import Togglable from './Togglable'
 import blogService from '../services/blogs'
 
 const BlogList = ({user, onLogout, onCreate}) => {
@@ -20,9 +21,9 @@ const BlogList = ({user, onLogout, onCreate}) => {
         <button type="submit" onClick={onLogout}>logout</button>
       </div>
       <h2>create new</h2>
-      <div>
+      <Togglable buttonLabel='new note'>
         <CreateBlog onCreate={onCreate}/>
-      </div>
+      </Togglable>
       <div>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
