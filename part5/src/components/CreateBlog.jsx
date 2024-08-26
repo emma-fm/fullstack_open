@@ -1,26 +1,24 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
-const CreateBlog = ({onCreate}) => {
+const CreateBlog = ({createBlog}) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
 
-  const handleCreate = (event) => {
+  const addBlog = (event) => {
     event.preventDefault()
 
     if (title && author && url) {
       const blog = {
         title, author, url
       }
-      blogService.create(blog)
-      onCreate(blog)
+      createBlog(blog)
     }
   }
 
   return (
     <div>
-      <form onSubmit={handleCreate}>
+      <form onSubmit={addBlog}>
         <div>
           title
           <input

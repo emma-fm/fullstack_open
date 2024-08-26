@@ -13,6 +13,15 @@ const BlogList = ({user, onLogout, onCreate}) => {
     )  
   }, [])
 
+  const addBlog = (blog) => {
+    blogService
+      .create(blog)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        onCreate(blog)
+      })
+  }
+
   return (
     <div>
       <h2>blogs</h2>
@@ -22,7 +31,7 @@ const BlogList = ({user, onLogout, onCreate}) => {
       </div>
       <h2>create new</h2>
       <Togglable buttonLabel='new note'>
-        <CreateBlog onCreate={onCreate}/>
+        <CreateBlog createBlog={addBlog}/>
       </Togglable>
       <div>
         {blogs.map(blog =>
