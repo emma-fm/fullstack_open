@@ -36,7 +36,7 @@ const App = () => {
 
   const handleLogin = (user) => {
     if (user === null) {
-      createBannerError(`Wrong credentials`)
+      createBannerError('Wrong credentials')
     }
     else {
       setUser(user)
@@ -51,12 +51,12 @@ const App = () => {
     setUser(null)
     blogService.setToken(null)
     window.localStorage.removeItem('loggedUser')
-    createBannerMsg(`Successfully logged out`)
+    createBannerMsg('Successfully logged out')
   }
 
   const handleCreate = (blog) => {
     if (blog === null) {
-      createBannerError(`Error creating the blog`)
+      createBannerError('Error creating the blog')
     }
     else {
       createBannerMsg(`Blog ${blog.title} successfully created`)
@@ -65,25 +65,25 @@ const App = () => {
 
   const handleDelete = (ok) => {
     if (!ok) {
-      createBannerError(`Error deleting blog: authorization error`)
+      createBannerError('Error deleting blog: authorization error')
     }
     else {
-      createBannerMsg(`Blog successfully deleted`)
+      createBannerMsg('Blog successfully deleted')
     }
   }
 
   return (
     <div>
-    <Notification message={bannerMsg} error={bannerError}/>
-    {user === null ?
+      <Notification message={bannerMsg} error={bannerError}/>
+      {user === null ?
         <div>
-        <LoginForm onLogin={handleLogin}/>
+          <LoginForm onLogin={handleLogin}/>
         </div>
         :
         <div>
-        <BlogList user={user} onLogout={handleLogout} onCreate={(handleCreate)} onDelete={(handleDelete)}/>
+          <BlogList user={user} onLogout={handleLogout} onCreate={(handleCreate)} onDelete={(handleDelete)}/>
         </div>
-    }
+      }
     </div>
   )
 }

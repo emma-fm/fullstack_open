@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import loginService from '../services/login'
 
-const LoginForm = ({onLogin}) => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+const LoginForm = ({ onLogin }) => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('Logging in with ', username, password)
-    
+
     try {
       const user = await loginService.login({
         username, password
@@ -32,7 +32,7 @@ const LoginForm = ({onLogin}) => {
             type="text"
             value={username}
             name="Username"
-            onChange={({target}) => setUsername(target.value)}
+            onChange={({ target }) => setUsername(target.value)}
           />
         </div>
         <div>
@@ -41,7 +41,7 @@ const LoginForm = ({onLogin}) => {
             type="password"
             value={password}
             name="Password"
-            onChange={({target}) => setPassword(target.value)}
+            onChange={({ target }) => setPassword(target.value)}
           />
         </div>
         <button type="submit">login</button>
