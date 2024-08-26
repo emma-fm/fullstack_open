@@ -34,7 +34,7 @@ const BlogList = ({user, onLogout, onCreate}) => {
     blogService
       .update(updatedBlog)
       .then(returnedBlog => {
-        
+        setBlogs(blogs.map(b => (b.id === returnedBlog.id) ? returnedBlog : b))
       })
   }
 
