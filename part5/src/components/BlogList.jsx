@@ -23,6 +23,7 @@ const BlogList = ({user, onLogout, onCreate}) => {
   }
 
   const likeBlog = (originalBlog) => {
+    console.log(originalBlog)
     const updatedBlog = {
       likes: originalBlog.likes + 1,
       user: originalBlog.user.id,
@@ -34,6 +35,7 @@ const BlogList = ({user, onLogout, onCreate}) => {
     blogService
       .update(updatedBlog)
       .then(returnedBlog => {
+        console.log(returnedBlog)
         setBlogs(blogs.map(b => (b.id === returnedBlog.id) ? returnedBlog : b))
       })
   }
