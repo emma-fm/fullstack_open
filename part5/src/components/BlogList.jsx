@@ -22,6 +22,22 @@ const BlogList = ({user, onLogout, onCreate}) => {
       })
   }
 
+  const likeBlog = (originalBlog) => {
+    const updatedBlog = {
+      likes: originalBlog.likes + 1,
+      user: originalBlog.user.id,
+      author: originalBlog.author,
+      url: originalBlog.url,
+      title: originalBlog.title,
+      id: originalBlog.id
+    }
+    blogService
+      .update(updatedBlog)
+      .then(returnedBlog => {
+        
+      })
+  }
+
   return (
     <div>
       <h2>blogs</h2>
@@ -35,7 +51,7 @@ const BlogList = ({user, onLogout, onCreate}) => {
       </Togglable>
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} onLike={likeBlog} />
         )}
       </div>
     </div>
