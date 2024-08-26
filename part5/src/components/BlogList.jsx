@@ -4,7 +4,7 @@ import CreateBlog from './CreateBlog'
 import Togglable from './Togglable'
 import blogService from '../services/blogs'
 
-const BlogList = ({user, onLogout, onCreate}) => {
+const BlogList = ({user, onLogout, onCreate, onDelete}) => {
   const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
@@ -41,6 +41,18 @@ const BlogList = ({user, onLogout, onCreate}) => {
       })
   }
 
+  const deleteBlog = (blog) => {
+    blogService
+      .remove(blog)
+      .then(() => {
+        setBlogs(blogs.filter(b => b.id != blog.id))
+        onDelete(true)
+      })
+      .catch(() => {
+        onDelete(false)
+      })
+  }
+
   return (
     <div>
       <h2>blogs</h2>
@@ -54,7 +66,7 @@ const BlogList = ({user, onLogout, onCreate}) => {
       </Togglable>
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} onLike={likeBlog} />
+          <Blog key={blog.id} blog={blog} onLike={likeBlog} onDelete={deleteBlog}/>
         )}
       </div>
     </div>

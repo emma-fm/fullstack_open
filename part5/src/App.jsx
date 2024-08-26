@@ -63,6 +63,15 @@ const App = () => {
     }
   }
 
+  const handleDelete = (ok) => {
+    if (!ok) {
+      createBannerError(`Error deleting blog: authorization error`)
+    }
+    else {
+      createBannerMsg(`Blog successfully deleted`)
+    }
+  }
+
   return (
     <div>
     <Notification message={bannerMsg} error={bannerError}/>
@@ -72,7 +81,7 @@ const App = () => {
         </div>
         :
         <div>
-        <BlogList user={user} onLogout={handleLogout} onCreate={(handleCreate)}/>
+        <BlogList user={user} onLogout={handleLogout} onCreate={(handleCreate)} onDelete={(handleDelete)}/>
         </div>
     }
     </div>
